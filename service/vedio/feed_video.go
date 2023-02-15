@@ -13,6 +13,7 @@ type feedVideo struct {
 	NextTime int64               `json:"next_time,omitempty"`
 }
 
+//
 func QueryFeedVideoList(userId int64, latestTime time.Time) (*feedVideo, error) {
 	return NewQueryFeedVideoListFlow(userId, latestTime).Do()
 }
