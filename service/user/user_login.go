@@ -4,15 +4,13 @@ import (
 	"TikTok_Project/repository"
 	"TikTok_Project/utils"
 	"errors"
-
-	"github.com/gin-gonic/gin"
 )
 
 
 
-func UserLogin(c *gin.Context, name string, password string) (*LoginAndRegisterResponse, int, error) {
+func UserLogin(name string, password string) (*LoginAndRegisterResponse, int, error) {
 	// 验证用户名和密码是否合法
-	if err := isValidUser(name, password); err != nil {
+	if err := IsValidUser(name, password); err != nil {
 		return nil, 1, err
 	}
 
