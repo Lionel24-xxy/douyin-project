@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/jinzhu/gorm"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
 )
 
 var (
@@ -10,9 +10,12 @@ var (
 )
 
 func InitMySQL() (err error) {
-	dsn := "root:xxy123456@(127.0.0.1:3306)/tiktok?charset=utf8mb4&parseTime=True&loc=Local"
+	//dsn := "root:xxy123456@(127.0.0.1:3306)/tiktok?charset=utf8mb4&parseTime=True&loc=Local"
+
+	//Leotao
+	dsn := "root:123456@(127.0.0.1:3306)/tiktok?charset=utf8mb4&parseTime=True&loc=Local"
 	DB, err = gorm.Open("mysql", dsn)
-	if err != nil{
+	if err != nil {
 		return
 	}
 	return DB.DB().Ping()
