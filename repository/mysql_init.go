@@ -26,7 +26,7 @@ func ModelAutoMigrate() {
 func Close() error {
 	err := DB.Close()
 	if err != nil {
-		return errors.New("can't close current db")
+		return errors.New("can't close current db！")
 	}
 	return nil
 }
