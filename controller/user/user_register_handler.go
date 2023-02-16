@@ -12,7 +12,9 @@ func UserRegister(c *gin.Context){
 	name := c.Query("username")
 	password := c.Query("password")
 	
-	registerResponse, statusCode, err := user.UserRegister(c, name, password)
+	registerResponse, statusCode, err := user.UserRegister(name, password)
+	//go user.UserRegister(name, password)
+
 
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
