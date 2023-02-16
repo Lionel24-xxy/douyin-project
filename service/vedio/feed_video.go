@@ -7,36 +7,39 @@ import (
 
 const maxVNum int = 30
 
-type FeedResponse struct {
+type FeedVideoList struct {
 	VideoList []*repository.Video `json:"video_list,omitempty"`
 	NextTime  int64               `json:"next_time,omitempty"`
 }
 
-//func QueryFeedVideoList(userId int64, latestTime time.Time) (*FeedResponse, error) {
-//	return NewQueryFeedVideoListFlow(userId, latestTime).Do()
-//}
+func QueryFeedVideoList(userId int64, latestTime time.Time) (*FeedVideoList, error) {
+	return NewQueryFeedVideoListFlow(userId, latestTime).Do()
+}
 
 type QueryFeedVideoListFlow struct {
 	userId     int64
 	latestTime time.Time
 	videos     []*repository.Video
 	nextTime   int64
-	feedVideo  *FeedResponse
+	feedVideo  *FeedVideoList
 }
 
-//func NewQueryFeedVideoListFlow(userId int64, latestTime time.Time) *QueryFeedVideoListFlow {
-//	return &QueryFeedVideoListFlow{userId: userId, latestTime: latestTime}
-//}
+func NewQueryFeedVideoListFlow(userId int64, latestTime time.Time) *QueryFeedVideoListFlow {
+	return &QueryFeedVideoListFlow{userId: userId, latestTime: latestTime}
+}
 
-func (q *QueryFeedVideoListFlow) Do() (*FeedResponse, error) {
+func (q *QueryFeedVideoListFlow) Do() (*FeedVideoList, error) {
 	q.check()
+	if err := q.prepareData(); err != nil {
+		return nil, err
+	}
 	if err := q.packData(); err != nil {
 		return nil, err
 	}
 	return q.feedVideo, nil
 }
 func (q *QueryFeedVideoListFlow) packData() error {
-	q.feedVideo = &FeedResponse{
+	q.feedVideo = &FeedVideoList{
 		VideoList: q.videos,
 		NextTime:  q.nextTime,
 	}
