@@ -8,7 +8,7 @@ import (
 
 const (
 	MaxUsernameLength = 32
-	MinPasswordLenth  = 8
+	MinPasswordLength  = 8
 )
 
 type LoginAndRegisterResponse struct {
@@ -26,7 +26,7 @@ func IsValidUser(name string, password string) error {
 	if password == "" {
 		return errors.New("密码为空")
 	}
-	if len(password) < MinPasswordLenth {
+	if len(password) < MinPasswordLength {
 		return errors.New("密码少于8位")
 	}
 	if !MatchStr(password) {

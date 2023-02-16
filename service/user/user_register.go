@@ -41,9 +41,9 @@ func UserRegister(name string, password string) (*LoginAndRegisterResponse, int,
 		return nil, 4, err
 	}
 	
-	respose := &LoginAndRegisterResponse{
+	response := &LoginAndRegisterResponse{
 		UserId: user.ID,
 		Token: token,
 	}
-	return respose, 0, nil
+	return response, 0, nil
 }
