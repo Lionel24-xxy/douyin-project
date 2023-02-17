@@ -1,6 +1,7 @@
 package router
 
 import (
+	"TikTok_Project/controller/feed"
 	"github.com/gin-gonic/gin"
 
 	"TikTok_Project/controller/user"
@@ -15,6 +16,7 @@ func InitRouter() *gin.Engine {
 		uGroup.POST("/user/register/", user.UserRegister)
 		uGroup.POST("/user/login/", user.UserLogin)
 		uGroup.GET("/user/", middleware.JWTMiddleWare(), user.UserInfo)
+		uGroup.POST("/publish/action/", middleware.JWTMiddleWare(), feed.PublishVideoHandler)
 	}
 	return r
 }
