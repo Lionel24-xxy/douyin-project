@@ -1,4 +1,4 @@
-package repository
+package feed
 
 import (
 	"TikTok_Project/service/vedio"
