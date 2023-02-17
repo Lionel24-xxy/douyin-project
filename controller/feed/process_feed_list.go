@@ -1,7 +1,7 @@
-package repository
+package feed
 
 import (
-	"TikTok_Project/service/vedio"
+	"TikTok_Project/service/video"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -42,7 +42,7 @@ func (p *ProxyFeedVideoList) DoNoLog() error {
 	if err == nil {
 		latestTime = time.Unix(0, intTime*1e6) //注意：前端传来的时间戳是以ms为单位的
 	}
-	videoList, err := vedio.QueryFeedVideoList(0, latestTime)
+	videoList, err := video.QueryFeedVideoList(0, latestTime)
 	if err != nil {
 		return err
 	}
@@ -57,7 +57,7 @@ func (p *ProxyFeedVideoList) FeedVideoListError(msg string) {
 	})
 }
 
-func (p *ProxyFeedVideoList) FeedVideoListOk(videoList *vedio.FeedVideoList) {
+func (p *ProxyFeedVideoList) FeedVideoListOk(videoList *video.FeedVideoList) {
 	p.JSON(http.StatusOK, FeedResponse{
 		StatusCode: 0,
 	},
