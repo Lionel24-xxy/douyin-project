@@ -1,10 +1,6 @@
 package repository
 
-import (
-	"errors"
-	"sync"
-	"time"
-)
+import "time"
 
 type Video struct {
 	Id            int64      `json:"id,omitempty"`
@@ -20,30 +16,4 @@ type Video struct {
 	Comments      []*Comment `json:"-"`
 	CreatedAt     time.Time  `json:"-"`
 	UpdatedAt     time.Time  `json:"-"`
-}
-
-type VideoDAO struct {
-}
-
-var (
-	videoDAO  *VideoDAO
-	videoOnce sync.Once
-)
-
-func NewVideoDAO() *VideoDAO {
-	videoOnce.Do(func() {
-		videoDAO = new(VideoDAO)
-	})
-	return videoDAO
-}
-
-// QueryVideoListByLimitAndTime  返回按投稿时间倒序的视频列表，并限制为最多limit个
-func (v *VideoDAO) QueryVideoListByLimitAndTime(limit int, latestTime time.Time, videoList *[]*Video) error {
-	if videoList == nil {
-		return errors.New("QueryVideoListByLimit videoList 空指针")
-	}
-	return DB.Model(&Video{}).Where("created_at<?", latestTime).
-		Order("created_at ASC").Limit(limit).
-		Select([]string{"id", "user_info_id", "play_url", "cover_url", "favorite_count", "comment_count", "is_favorite", "title", "created_at", "updated_at"}).
-		Find(videoList).Error
 }
