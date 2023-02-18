@@ -47,3 +47,12 @@ func (v *VideoDAO) QueryVideoListByLimitAndTime(limit int, latestTime time.Time,
 		Select([]string{"id", "user_info_id", "play_url", "cover_url", "favorite_count", "comment_count", "is_favorite", "title", "created_at", "updated_at"}).
 		Find(videoList).Error
 }
+
+// AddVideo 添加视频
+// 注意：由于视频和userinfo有多对一的关系，所以传入的Video参数一定要进行id的映射处理！
+func (v *VideoDAO) AddVideo(video *Video) error {
+	if video == nil {
+		return errors.New("AddVideo video 空指针")
+	}
+	return DB.Create(video).Error
+}
