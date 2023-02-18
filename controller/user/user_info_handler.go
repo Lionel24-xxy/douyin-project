@@ -29,11 +29,17 @@ func UserInfo(c *gin.Context) {
 		"status_code": 0,
 		"status_msg":  "Access User Information success!",
 		"user": gin.H{
-			"id":             user.ID,
-			"name":           user.Username,
-			"follow_count":   user.FollowCount,
-			"follower_count": user.FollowerCount,
-			"is_follow":      user.IsFollow,
+			"id":             	user.ID,
+			"name":           	user.Username,
+			"follow_count":   	user.FollowCount,
+			"follower_count": 	user.FollowerCount,
+			"is_follow":      	user.IsFollow,
+			"avatar": 		  	user.Avatar,
+            "background_image": user.BackgroundImage,
+            "signature": 		user.Signature,
+            "total_favorited": 	user.TotalFavorited,
+            "work_count": 		user.WorkCount,
+            "favorite_count": 	user.FavoriteCount,
 		}})
 }
 

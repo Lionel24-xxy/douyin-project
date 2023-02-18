@@ -26,7 +26,7 @@ func UserLogin(c *gin.Context){
 	c.JSON(http.StatusOK, gin.H{
 		"status_code": statusCode, 
 		"status_msg": "Login succeed!",
-		"user_id": (*loginResponse).UserId,
-		"token": (*loginResponse).Token,
+		"user_id": loginResponse.UserId,
+		"token": loginResponse.Token,
 	})
 }

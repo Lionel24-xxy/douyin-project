@@ -28,6 +28,9 @@ func (f *PostVideoFlow) Do() error {
 	if err := f.publish(); err != nil {
 		return err
 	}
+	if err := f.addWorkCount(); err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -40,4 +43,8 @@ func (f *PostVideoFlow) publish() error {
 		Title:    f.title,
 	}
 	return repository.NewVideoDAO().AddVideo(video)
+}
+// 增加发布作品数
+func (f *PostVideoFlow) addWorkCount() error {
+	return repository.NewVideoDAO().UpdateWorkCount(f.userId)
 }

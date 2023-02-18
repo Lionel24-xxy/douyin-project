@@ -3,10 +3,12 @@ package feed
 import (
 	"TikTok_Project/service/video"
 	"TikTok_Project/utils"
-	"github.com/gin-gonic/gin"
+	
 	"net/http"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -61,7 +63,7 @@ func PublishVideoHandler(ctx *gin.Context) {
 		VideoName := utils.NewFileName(userID) //根据UserID得到唯一的video文件名
 		filename := VideoName + suffix
 		//Join 将任意数量的路径元素连接到一个路径中，用操作系统特定的分隔符将它们分开。
-		savePath := filepath.Join("D:\\Golang_workspace\\src\\douyin-project\\static", filename) //要更换成自己的static目录
+		savePath := filepath.Join("./static", filename) //要更换成自己的static目录
 		err = ctx.SaveUploadedFile(file, savePath)
 		if err != nil {
 			PublishVideoError(ctx, err.Error())
@@ -69,13 +71,19 @@ func PublishVideoHandler(ctx *gin.Context) {
 		}
 		//截取第一帧画面作为封面
 		pictureName := VideoName + ".jpg"
-		savePath2 := filepath.Join("D:\\Golang_workspace\\src\\douyin-project\\static", pictureName) //要更换成自己的static目录
-		cmd := exec.Command("ffmpeg", "-i", savePath, savePath2)
+		savePath2 := filepath.Join("./static", pictureName) //要更换成自己的static目录
+		cmd := exec.Command("ffmpeg", "-i", savePath, "-frames:v", "1", savePath2)
+		// var out bytes.Buffer
+		// var stderr bytes.Buffer
+		// cmd.Stdout = &out
+		// cmd.Stderr = &stderr
 		err := cmd.Run()
-		if err.Error() != "exit status 0xffffffea" {
+		if err != nil {
+			// fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
 			PublishVideoError(ctx, err.Error())
 			continue
 		}
+
 		//数据库持久化
 		Err := video.PostVideo(userID, filename, pictureName, title)
 		if Err != nil {

@@ -4,6 +4,8 @@ import (
 	"errors"
 	"sync"
 	"time"
+
+	"github.com/jinzhu/gorm"
 )
 
 type Video struct {
@@ -55,4 +57,14 @@ func (v *VideoDAO) AddVideo(video *Video) error {
 		return errors.New("AddVideo video 空指针")
 	}
 	return DB.Create(video).Error
+}
+// 更新发布视频数
+func (v *VideoDAO) UpdateWorkCount(UserId int64) error {
+	var user User
+	DB.First(&user, "id = ?", UserId)
+	if user.ID == 0 {
+		return errors.New("用户不存在")
+	}
+	err := DB.Model(&user).Update("work_count", gorm.Expr("work_count+1")).Error
+	return err
 }
