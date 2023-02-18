@@ -3,6 +3,7 @@ package feed
 import (
 	"TikTok_Project/service/video"
 	"TikTok_Project/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os/exec"
@@ -70,9 +71,9 @@ func PublishVideoHandler(ctx *gin.Context) {
 		//截取第一帧画面作为封面
 		pictureName := VideoName + ".jpg"
 		savePath2 := filepath.Join("D:\\Golang_workspace\\src\\douyin-project\\static", pictureName) //要更换成自己的static目录
-		cmd := exec.Command("ffmpeg", "-i", savePath, savePath2)
+		cmd := exec.Command("ffmpeg", "-i", savePath, "-frames:v", "1", savePath2)
 		err := cmd.Run()
-		if err.Error() != "exit status 0xffffffea" {
+		if err != nil {
 			PublishVideoError(ctx, err.Error())
 			continue
 		}
@@ -82,6 +83,7 @@ func PublishVideoHandler(ctx *gin.Context) {
 			PublishVideoError(ctx, Err.Error())
 			continue
 		}
+		fmt.Println(Err.Error())
 		PublishVideoOk(ctx, filename+"上传成功!")
 	}
 }
