@@ -90,6 +90,7 @@ func PublishVideoHandler(ctx *gin.Context) {
 			PublishVideoError(ctx, Err.Error())
 			continue
 		}
+		//fmt.Println(Err.Error())
 		PublishVideoOk(ctx, filename+"上传成功!")
 	}
 }
