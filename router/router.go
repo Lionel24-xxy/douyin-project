@@ -11,6 +11,7 @@ import (
 func InitRouter() *gin.Engine {
 
 	r := gin.Default()
+	r.Static("static", "./static")
 	uGroup := r.Group("douyin")
 	{
 		// 基础接口
@@ -22,7 +23,7 @@ func InitRouter() *gin.Engine {
 		// 互动接口
 
 		// 社交接口
-		
+
 	}
 	return r
 }
