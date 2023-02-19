@@ -11,6 +11,10 @@ import (
 func InitRouter() *gin.Engine {
 
 	r := gin.Default()
+
+	// 视频及截图存放位置
+	r.Static("static", "./static")
+
 	uGroup := r.Group("douyin")
 	{
 		// 基础接口
@@ -18,7 +22,7 @@ func InitRouter() *gin.Engine {
 		uGroup.POST("/user/login/", user.UserLogin)
 		uGroup.GET("/user/", middleware.JWTMiddleWare(), user.UserInfo)
 		uGroup.POST("/publish/action/", middleware.JWTMiddleWare(), feed.PublishVideoHandler)
-
+		uGroup.GET("/publish/list/", middleware.JWTMiddleWare(), feed.PublishListHandler)
 		// 互动接口
 
 		// 社交接口

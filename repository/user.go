@@ -59,7 +59,7 @@ func (u *UserDAO) UserLoginVerify(name string, password string, user *User) bool
 	return user.ID == 0
 }
 
-// User
+// UserInfo
 func (u *UserDAO) UserInfoById(userId int64, user *User) error {
 	if user == nil {
 		return errors.New("空指针错误")
@@ -71,4 +71,11 @@ func (u *UserDAO) UserInfoById(userId int64, user *User) error {
 		return errors.New("用户不存在")
 	}
 	return nil
+}
+// 用户是否存在
+func (u *UserDAO) IsExistUserId(userid int64) bool {
+	var user User
+	DB.Where("id=?", userid).First(&user)
+
+	return user.ID == 0
 }

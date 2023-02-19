@@ -68,3 +68,15 @@ func (v *VideoDAO) UpdateWorkCount(UserId int64) error {
 	err := DB.Model(&user).Update("work_count", gorm.Expr("work_count+1")).Error
 	return err
 }
+
+// 获取视频列表
+func (v *VideoDAO) QueryPublishListById(userId int64, videoList *[]*Video) error {
+	if videoList == nil {
+		return errors.New("QueryPublishListById videoList 空指针")
+	}
+
+	err := DB.Where("user_id=?", userId).
+		Select([]string{"id", "user_id", "play_url", "cover_url", "favorite_count", "comment_count", "is_favorite", "title"}).
+		Find(videoList).Error
+	return err
+}

@@ -19,6 +19,10 @@ func main() {
 	}()
 	repository.ModelAutoMigrate()
 
+	if err := repository.InitRedisClient(); err != nil {
+		panic(err)
+	}
+
 	r := router.InitRouter()
 	r.Run()
 }
