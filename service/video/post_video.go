@@ -1,6 +1,9 @@
 package video
 
-import "TikTok_Project/repository"
+import (
+	"TikTok_Project/repository"
+	"TikTok_Project/utils"
+)
 
 func PostVideo(userID int64, videoName, coverName, title string) error {
 	return NewPostVideoFlow(userID, videoName, coverName, title).Do()
@@ -25,6 +28,7 @@ type PostVideoFlow struct {
 }
 
 func (f *PostVideoFlow) Do() error {
+	f.prepareParam()
 	if err := f.publish(); err != nil {
 		return err
 	}
@@ -44,7 +48,14 @@ func (f *PostVideoFlow) publish() error {
 	}
 	return repository.NewVideoDAO().AddVideo(video)
 }
+
 // 增加发布作品数
 func (f *PostVideoFlow) addWorkCount() error {
 	return repository.NewVideoDAO().UpdateWorkCount(f.userId)
+}
+
+// 获得url
+func (f *PostVideoFlow) prepareParam() {
+	f.videoName = utils.GetFileUrl(f.videoName)
+	f.coverName = utils.GetFileUrl(f.coverName)
 }
