@@ -26,7 +26,7 @@ func InitRouter() *gin.Engine {
 		// 互动接口
 
 		// 社交接口
-		
+
 	}
 	return r
 }
