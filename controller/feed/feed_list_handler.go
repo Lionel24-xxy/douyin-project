@@ -101,6 +101,7 @@ func (p *ProxyFeedVideoList) FeedVideoListOk(videoList *video.FeedVideoList) {
 	p.JSON(http.StatusOK, FeedListResponse{
 		FeedResponse: FeedResponse{
 			StatusCode: 0,
+			StatusMsg:  "success!",
 		},
 		FeedVideoList: videoList,
 	},
