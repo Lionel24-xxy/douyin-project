@@ -2,7 +2,7 @@
 
 ## 项目结构
 
-
+```
 │  main.go 为主文件，运行时`go run`即可
 │
 ├─controller 控制层，用于接收参数，编写逻辑，返回参数
@@ -50,6 +50,7 @@
         password.go  sha1加密
         snowflakes.go 雪花算法
         video.go  雪花id和userid生成独一无二视频名，视频url拼接
+```
 
 
 首先你要在自己的文件夹创建static目录，其次修改mysql和redis的密码（需要自己创建tiktok数据库），更改视频url的address，然后在main.go同样修改address，然后运行main.go。
