@@ -18,7 +18,7 @@ func InitRouter() *gin.Engine {
 	uGroup := r.Group("douyin")
 	{
 		// 基础接口
-		uGroup.GET("/feed/", feed.FeedVideoHandler)
+		uGroup.GET("/feed/", feed.FeedVideoListHandler)
 		uGroup.POST("/user/register/", user.UserRegister)
 		uGroup.POST("/user/login/", user.UserLogin)
 		uGroup.GET("/user/", middleware.JWTMiddleWare(), user.UserInfo)

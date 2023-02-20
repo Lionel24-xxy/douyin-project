@@ -13,6 +13,10 @@ import (
 type FeedResponse struct {
 	StatusCode int32  `json:"status_code"`
 	StatusMsg  string `json:"status_msg,omitempty"`
+}
+
+type FeedListResponse struct {
+	FeedResponse
 	*video.FeedVideoList
 }
 
@@ -20,34 +24,12 @@ type ProxyFeedVideoList struct {
 	*gin.Context
 }
 
-func NewProxyFeedVideoList(ctx *gin.Context) *ProxyFeedVideoList {
-	return &ProxyFeedVideoList{ctx}
-}
-
-func (p *ProxyFeedVideoList) FeedVideoListError(msg string) {
-	p.JSON(http.StatusOK,
-		FeedResponse{
-			StatusCode: 1,
-			StatusMsg:  msg,
-		})
-}
-
-func (p *ProxyFeedVideoList) FeedVideoListOK(videoList *video.FeedVideoList) {
-	p.JSON(http.StatusOK,
-		FeedResponse{
-			StatusCode:    0,
-			StatusMsg:     "success!",
-			FeedVideoList: videoList,
-		})
-}
-
-func FeedVideoHandler(ctx *gin.Context) {
-	p := NewProxyFeedVideoList(ctx)
-	token, ok := ctx.GetQuery("token")
-
+func FeedVideoListHandler(c *gin.Context) {
+	p := NewProxyFeedVideoList(c)
+	token, ok := c.GetQuery("token")
 	//无登录状态
 	if !ok {
-		err := p.DoNoToken()
+		err := p.DoNoLog()
 		if err != nil {
 			p.FeedVideoListError(err.Error())
 		}
@@ -55,30 +37,35 @@ func FeedVideoHandler(ctx *gin.Context) {
 	}
 
 	//有登录状态
-	err := p.DoHasToken(token)
+	err := p.DoHasLog(token)
 	if err != nil {
 		p.FeedVideoListError(err.Error())
 	}
+
 }
 
-// DoNoToken 未登录的视频流推送处理
-func (p *ProxyFeedVideoList) DoNoToken() error {
+func NewProxyFeedVideoList(c *gin.Context) *ProxyFeedVideoList {
+	return &ProxyFeedVideoList{Context: c}
+}
+
+// DoNoLog 未登录的视频流推送处理
+func (p *ProxyFeedVideoList) DoNoLog() error {
 	rawTimestamp := p.Query("latest_time")
 	var latestTime time.Time
 	intTime, err := strconv.ParseInt(rawTimestamp, 10, 64)
 	if err == nil {
-		latestTime = time.Unix(0, intTime*1e6) ////注意：前端传来的时间戳是以ms为单位的
+		latestTime = time.Unix(0, intTime*1e6) //注意：前端传来的时间戳是以ms为单位的
 	}
 	videoList, err := video.QueryFeedVideoList(0, latestTime)
 	if err != nil {
 		return err
 	}
-	p.FeedVideoListOK(videoList)
+	p.FeedVideoListOk(videoList)
 	return nil
 }
 
-// DoHasToken 如果是登录状态，则生成UserId字段
-func (p *ProxyFeedVideoList) DoHasToken(token string) error {
+// DoHasLog 如果是登录状态，则生成UserId字段
+func (p *ProxyFeedVideoList) DoHasLog(token string) error {
 	//解析成功
 	if claim, ok := utils.ParseToken(token); ok {
 		//token超时
@@ -96,14 +83,26 @@ func (p *ProxyFeedVideoList) DoHasToken(token string) error {
 		if err != nil {
 			return err
 		}
-		p.FeedVideoListOK(videoList)
+		p.FeedVideoListOk(videoList)
 		return nil
 	}
 	//解析失败
 	return errors.New("token不正确")
 }
 
-//            "favorite_count": 0,
-//            "comment_count": 0,
-//            "is_favorite": true,
-//这之后要补这三个的
+func (p *ProxyFeedVideoList) FeedVideoListError(msg string) {
+	p.JSON(http.StatusOK, FeedResponse{
+		StatusCode: 1,
+		StatusMsg:  msg,
+	})
+}
+
+func (p *ProxyFeedVideoList) FeedVideoListOk(videoList *video.FeedVideoList) {
+	p.JSON(http.StatusOK, FeedListResponse{
+		FeedResponse: FeedResponse{
+			StatusCode: 0,
+		},
+		FeedVideoList: videoList,
+	},
+	)
+}
