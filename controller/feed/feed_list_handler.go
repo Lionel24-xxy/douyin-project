@@ -13,10 +13,6 @@ import (
 type FeedResponse struct {
 	StatusCode int32  `json:"status_code"`
 	StatusMsg  string `json:"status_msg,omitempty"`
-}
-
-type FeedListResponse struct {
-	FeedResponse
 	*video.FeedVideoList
 }
 
@@ -24,12 +20,29 @@ type ProxyFeedVideoList struct {
 	*gin.Context
 }
 
+func (p *ProxyFeedVideoList) FeedVideoListError(msg string) {
+	p.JSON(http.StatusOK,
+		FeedResponse{
+			StatusCode: 1,
+			StatusMsg:  msg,
+		})
+}
+
+func (p *ProxyFeedVideoList) FeedVideoListOk(videoList *video.FeedVideoList) {
+	p.JSON(http.StatusOK,
+		FeedResponse{
+			StatusCode:    0,
+			StatusMsg:     "success!",
+			FeedVideoList: videoList,
+		})
+}
+
 func FeedVideoListHandler(c *gin.Context) {
 	p := NewProxyFeedVideoList(c)
 	token, ok := c.GetQuery("token")
 	//无登录状态
 	if !ok {
-		err := p.DoNoLog()
+		err := p.DoNoToken()
 		if err != nil {
 			p.FeedVideoListError(err.Error())
 		}
@@ -37,7 +50,7 @@ func FeedVideoListHandler(c *gin.Context) {
 	}
 
 	//有登录状态
-	err := p.DoHasLog(token)
+	err := p.DoHasToken(token)
 	if err != nil {
 		p.FeedVideoListError(err.Error())
 	}
@@ -48,8 +61,8 @@ func NewProxyFeedVideoList(c *gin.Context) *ProxyFeedVideoList {
 	return &ProxyFeedVideoList{Context: c}
 }
 
-// DoNoLog 未登录的视频流推送处理
-func (p *ProxyFeedVideoList) DoNoLog() error {
+// DoNoToken 未登录的视频流推送处理
+func (p *ProxyFeedVideoList) DoNoToken() error {
 	rawTimestamp := p.Query("latest_time")
 	var latestTime time.Time
 	intTime, err := strconv.ParseInt(rawTimestamp, 10, 64)
@@ -64,8 +77,8 @@ func (p *ProxyFeedVideoList) DoNoLog() error {
 	return nil
 }
 
-// DoHasLog 如果是登录状态，则生成UserId字段
-func (p *ProxyFeedVideoList) DoHasLog(token string) error {
+// DoHasToken 如果是登录状态，则生成UserId字段
+func (p *ProxyFeedVideoList) DoHasToken(token string) error {
 	//解析成功
 	if claim, ok := utils.ParseToken(token); ok {
 		//token超时
@@ -90,20 +103,7 @@ func (p *ProxyFeedVideoList) DoHasLog(token string) error {
 	return errors.New("token不正确")
 }
 
-func (p *ProxyFeedVideoList) FeedVideoListError(msg string) {
-	p.JSON(http.StatusOK, FeedResponse{
-		StatusCode: 1,
-		StatusMsg:  msg,
-	})
-}
-
-func (p *ProxyFeedVideoList) FeedVideoListOk(videoList *video.FeedVideoList) {
-	p.JSON(http.StatusOK, FeedListResponse{
-		FeedResponse: FeedResponse{
-			StatusCode: 0,
-			StatusMsg:  "success!",
-		},
-		FeedVideoList: videoList,
-	},
-	)
-}
+//            "favorite_count": 0,
+//            "comment_count": 0,
+//            "is_favorite": true,
+//这之后要补这三个的
