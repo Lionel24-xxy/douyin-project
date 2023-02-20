@@ -46,7 +46,7 @@ func (v *VideoDAO) QueryVideoListByLimitAndTime(limit int, latestTime time.Time,
 	}
 	return DB.Model(&Video{}).Where("created_at<?", latestTime).
 		Order("created_at ASC").Limit(limit).
-		Select([]string{"id", "user_info_id", "play_url", "cover_url", "favorite_count", "comment_count", "is_favorite", "title", "created_at", "updated_at"}).
+		Select([]string{"id", "user_id", "play_url", "cover_url", "favorite_count", "comment_count", "is_favorite", "title", "created_at", "updated_at"}).
 		Find(videoList).Error
 }
 
@@ -58,7 +58,8 @@ func (v *VideoDAO) AddVideo(video *Video) error {
 	}
 	return DB.Create(video).Error
 }
-// 更新发布视频数
+
+// UpdateWorkCount 更新发布视频数
 func (v *VideoDAO) UpdateWorkCount(UserId int64) error {
 	var user User
 	DB.First(&user, "id = ?", UserId)
@@ -69,7 +70,7 @@ func (v *VideoDAO) UpdateWorkCount(UserId int64) error {
 	return err
 }
 
-// 获取视频列表
+// QueryPublishListById 获取视频列表
 func (v *VideoDAO) QueryPublishListById(userId int64, videoList *[]*Video) error {
 	if videoList == nil {
 		return errors.New("QueryPublishListById videoList 空指针")
