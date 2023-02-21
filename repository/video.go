@@ -81,3 +81,10 @@ func (v *VideoDAO) QueryPublishListById(userId int64, videoList *[]*Video) error
 		Find(videoList).Error
 	return err
 }
+
+func (v *VideoDAO) IsExistVideoById(videoId int64) bool {
+	var video Video
+	DB.Find(&video, "id=?", videoId)
+
+	return video.Id == 0
+}

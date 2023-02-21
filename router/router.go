@@ -2,9 +2,11 @@ package router
 
 import (
 	"TikTok_Project/controller/feed"
+
 	"github.com/gin-gonic/gin"
 
 	"TikTok_Project/controller/user"
+	"TikTok_Project/controller/comment"
 	"TikTok_Project/middleware"
 )
 
@@ -26,6 +28,8 @@ func InitRouter() *gin.Engine {
 		uGroup.GET("/publish/list/", middleware.JWTMiddleWare(), feed.PublishListHandler)
 		// 互动接口
 
+		uGroup.POST("/comment/action/", middleware.JWTMiddleWare(), comment.PublishCommentHandler)
+		uGroup.GET("/comment/list/", middleware.JWTMiddleWare(), comment.CommentListHandler)
 		// 社交接口
 
 	}

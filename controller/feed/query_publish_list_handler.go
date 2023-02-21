@@ -24,6 +24,7 @@ func PublishListHandler(c *gin.Context) {
 	publishList, err := video.QueryPublishList(userId)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"status_code": 2, "status_msg": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, PublishListResponse{

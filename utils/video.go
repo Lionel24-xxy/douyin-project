@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	defaultIP   = "192.168.24.122"
+	defaultIP   = "10.175.98.180"
 	defaultPort = 8080
 )
 

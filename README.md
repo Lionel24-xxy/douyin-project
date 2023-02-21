@@ -2,18 +2,63 @@
 
 ## 项目结构
 
-`main.go`为主文件，运行时`go run`即可
+```bash
+│ main.go 为主文件，运行时`go run`即可
+├─controller
+│  ├─comment
+│  │      comment_action_handler.go
+│  │      comment_list_handler.go
+│  │
+│  ├─feed
+│  │      feed_list_handler.go
+│  │      ffmpeg.exe
+│  │      publish_video_handler.go
+│  │      query_follower_handler.go
+│  │      query_publish_list_handler.go
+│  │
+│  └─user
+│          user_info_handler.go
+│          user_login_handler.go
+│          user_register_handler.go
+│
+├─middleware
+│      AuthMiddleWare.go
+│
+├─repository
+│      comment.go
+│      mysql_init.go
+│      redis.go
+│      redis_test.go
+│      user.go
+│      video.go
+│
+├─router
+│      router.go
+│
+├─service
+│  ├─comment
+│  │      get_comment_list.go
+│  │      publish_comment.go
+│  │
+│  ├─user
+│  │      common.go
+│  │      common_test.go
+│  │      query_follower_list.go
+│  │      user_login.go
+│  │      user_register.go
+│  │
+│  └─video
+│          feed_video.go
+│          post_video.go
+│          query_videolist.go
+│
+├─static
+│
+└─utils
+        comment.go
+        jwt.go
+        password.go
+        snowflakes.go
+        video.go
+```
 
-`config`（待做）：初始化配置文件
-
-`router`：路由层，包含路由组，项目不同功能的入口
-
-`controller`：控制层，用于接收参数，编写逻辑，返回参数
-
-`service`：服务层，用于实现主要业务函数
-
-`repository`：模型层，用于数据库初始化以及完成和数据库有关的操作
-
-`utils`：工具包，包括`jwt`令牌功能、密码加密功能等
-
-`middleware`：中间件，包括用户鉴权功能（验证`Token`同时将`Token`中携带的`user_id`信息写入上下文）
