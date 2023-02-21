@@ -21,7 +21,7 @@ const (
 func InitRedisClient() (err error) {
 	rdb = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379", 	// redis地址
-		Password: "xxy123456",          // redis密码，没有则留空
+		Password: "xxx",          // redis密码，没有则留空
 		DB:       0,                	// 默认数据库，默认是0
 	})
 
