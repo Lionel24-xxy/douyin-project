@@ -2,6 +2,7 @@ package comment
 
 import (
 	"TikTok_Project/service/comment"
+	"TikTok_Project/utils"
 	"errors"
 	"fmt"
 	"net/http"
@@ -69,7 +70,9 @@ func (p *ProxyPostCommentHandler) prepareParse(c *gin.Context) error {
 	// 判断是发布还是删除
 	switch actiontype {
 	case comment.CREATE_COMMENT: // 发布评论
-		p.commentText = c.Query("comment_text")
+		rawText := c.Query("comment_text")
+		p.commentText = p.sensitiveCheck(rawText)
+
 	case comment.DELETE_COMMENT: // 删除评论
 		p.commentId, err = strconv.ParseInt(c.Query("comment_id"), 10, 64)
 		if err != nil {
@@ -82,3 +85,13 @@ func (p *ProxyPostCommentHandler) prepareParse(c *gin.Context) error {
 	return nil
 }
 
+// 敏感词检测及替换
+func (p *ProxyPostCommentHandler) sensitiveCheck(text string) string {
+	
+	isContain := utils.SensitiveWordCheck(text, int(p.userId))
+	if isContain {
+		replaceText := utils.SensitiveWordReplace(text)
+		return replaceText
+	}
+	return text
+}

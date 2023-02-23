@@ -3,6 +3,7 @@ package main
 import (
 	"TikTok_Project/repository"
 	"TikTok_Project/router"
+	"TikTok_Project/utils"
 	"log"
 )
 
@@ -20,6 +21,11 @@ func main() {
 	repository.ModelAutoMigrate()
 
 	if err := repository.InitRedisClient(); err != nil {
+		panic(err)
+	}
+
+	if err := utils.SensitiveWordInit(); err != nil {
+		log.Printf("敏感词初始化失败")
 		panic(err)
 	}
 
