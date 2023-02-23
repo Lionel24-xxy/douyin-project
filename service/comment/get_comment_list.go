@@ -8,7 +8,7 @@ import (
 )
 
 type CommentList struct {
-	Comments []*repository.Comment  `json:"comment_list"`
+	Comments []*repository.Comment `json:"comment_list"`
 }
 
 func QueryCommentList(userId, videoId int64) (*CommentList, error) {

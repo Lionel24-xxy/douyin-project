@@ -2,6 +2,8 @@ package repository
 
 import (
 	"errors"
+	"github.com/jinzhu/gorm"
+	"log"
 	"sync"
 )
 
@@ -79,10 +81,14 @@ func (u *UserDAO) UserInfoById(userId int64, user *User) error {
 
 // 用户是否存在
 func (u *UserDAO) IsExistUserId(userid int64) bool {
-	var user User
-	DB.Where("id=?", userid).First(&user)
-
-	return user.ID != 0
+	var userinfo User
+	if err := DB.Where("id=?", userid).Select("id").First(&userinfo).Error; err != nil {
+		log.Println(err)
+	}
+	if userinfo.ID == 0 {
+		return false
+	}
+	return true
 }
 
 func (u *UserDAO) GetFollowerListByUserId(userId int64, userList *[]*User) error {
@@ -99,4 +105,34 @@ func (u *UserDAO) GetFollowerListByUserId(userId int64, userList *[]*User) error
 	}
 
 	return nil
+}
+
+func (u *UserDAO) AddUserFollow(userId, userToId int64) error {
+	return DB.Transaction(func(tx *gorm.DB) error { //事务以块的形式开始一个事务，返回错误会回滚，否则就提交。
+		if err := tx.Exec("UPDATE users SET follow_count=follow_count+1 WHERE id=?", userId).Error; err != nil {
+			return err
+		}
+		if err := tx.Exec("UPDATE users SET follower_count=follower_count+1 WHERE id=?", userToId).Error; err != nil {
+			return err
+		}
+		if err := tx.Exec("INSERT INTO `user_relations`  (`user_id`,`follow_id`) VALUES (?,?)", userId, userToId).Error; err != nil { //连接表user_relations
+			return err
+		}
+		return nil
+	})
+}
+
+func (u *UserDAO) CancelUserFollow(userId, userToId int64) error {
+	return DB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Exec("UPDATE users SET follow_count=follow_count-1 WHERE id = ? AND follow_count>0", userId).Error; err != nil {
+			return err
+		}
+		if err := tx.Exec("UPDATE users SET follower_count=follower_count-1 WHERE id = ? AND follower_count>0", userToId).Error; err != nil {
+			return err
+		}
+		if err := tx.Exec("DELETE FROM `user_relations` WHERE user_id=? AND follow_id=?", userId, userToId).Error; err != nil {
+			return err
+		}
+		return nil
+	})
 }

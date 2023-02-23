@@ -10,13 +10,13 @@ import (
 )
 
 type ProxyCommentListHandler struct {
-	videoId		int64
-	userId 		int64
+	videoId int64
+	userId  int64
 }
 
 type CommentListResponse struct {
-	StatusCode		int			`json:"status_code"`
-	StatusMsg 		string  	`json:"status_msg"`
+	StatusCode int    `json:"status_code"`
+	StatusMsg  string `json:"status_msg"`
 	*comment.CommentList
 }
 
@@ -35,8 +35,8 @@ func CommentListHandler(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, CommentListResponse{
-		StatusCode: 0,
-		StatusMsg: "获取评论列表成功！",
+		StatusCode:  0,
+		StatusMsg:   "获取评论列表成功！",
 		CommentList: commentList,
 	})
 }
@@ -48,7 +48,7 @@ func (p *ProxyCommentListHandler) prepareParse(c *gin.Context) error {
 		return errors.New("userId解析出错")
 	}
 	p.userId = userId
-	
+
 	rawVideoId := c.Query("video_id")
 	videoId, err := strconv.ParseInt(rawVideoId, 10, 64)
 	if err != nil {

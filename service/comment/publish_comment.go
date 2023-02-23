@@ -14,7 +14,7 @@ const (
 )
 
 type CommentResponse struct {
-	Comments 	*repository.Comment 	`json:"comment"`
+	Comments *repository.Comment `json:"comment"`
 }
 
 func PublishComment(userId int64, videoId int64, actiontype int64, commentText string, commentId int64) (*CommentResponse, error) {
@@ -37,10 +37,9 @@ func PublishComment(userId int64, videoId int64, actiontype int64, commentText s
 	case 1:
 		/// 发布评论
 		comment = repository.Comment{
-			UserId: userId, 
+			UserId:  userId,
 			VideoId: videoId,
 			Content: commentText,
-
 		}
 		err := repository.InitCommentDAO().AddComment(&comment)
 		if err != nil {
@@ -49,7 +48,7 @@ func PublishComment(userId int64, videoId int64, actiontype int64, commentText s
 	case 2:
 		/// 删除评论
 		// 根据commentId找到评论
-		err := repository.InitCommentDAO().QueryCommentById(commentId, &comment) 
+		err := repository.InitCommentDAO().QueryCommentById(commentId, &comment)
 		if err != nil {
 			return nil, err
 		}
@@ -61,7 +60,7 @@ func PublishComment(userId int64, videoId int64, actiontype int64, commentText s
 	default:
 		return nil, errors.New("未定义的操作")
 	}
-	
+
 	/// 返回结果
 	// 添加user信息
 	var user repository.User

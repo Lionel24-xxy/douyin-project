@@ -33,10 +33,26 @@ func InitRedisClient() (err error) {
 	return nil
 }
 
-
 // GetVideoFavorState 得到点赞状态
 func GetVideoFavorState(userId int64, videoId int64) bool {
 	key := fmt.Sprintf("%s:%d", favor, userId)
 	ret := RDB.SIsMember(CTX, key, videoId)
 	return ret.Val()
+}
+
+// GetUserRelation 得到关注状态
+func GetUserRelation(userId int64, followId int64) bool {
+	key := fmt.Sprintf("%s:%d", relation, userId)
+	ret := RDB.SIsMember(CTX, key, followId)
+	return ret.Val()
+}
+
+// UpdateUserRelation 更新点赞状态，state:true为点关注，false为取消关注
+func UpdateUserRelation(userId int64, followId int64, state bool) {
+	key := fmt.Sprintf("%s:%d", relation, userId)
+	if state {
+		RDB.SAdd(CTX, key, followId) //添加集合元素
+		return
+	}
+	RDB.SRem(CTX, key, followId) //删除集合元素
 }
