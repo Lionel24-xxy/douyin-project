@@ -3,6 +3,7 @@ package router
 import (
 	"TikTok_Project/controller/feed"
 	"TikTok_Project/controller/follow"
+	"TikTok_Project/controller/video"
 
 	"github.com/gin-gonic/gin"
 
@@ -29,12 +30,15 @@ func InitRouter() *gin.Engine {
 		uGroup.GET("/publish/list/", middleware.JWTMiddleWare(), feed.PublishListHandler)
 
 		// 互动接口
-
+		uGroup.POST("/favorite/action/", middleware.JWTMiddleWare(), video.PostFavorHandler)
+		uGroup.GET("/favorite/list/", middleware.JWTMiddleWare(), video.QueryFavorVideoListHandler)
 		uGroup.POST("/comment/action/", middleware.JWTMiddleWare(), comment.PublishCommentHandler)
 		uGroup.GET("/comment/list/", middleware.JWTMiddleWare(), comment.CommentListHandler)
 
 		// 社交接口
 		uGroup.POST("/relation/action/", middleware.JWTMiddleWare(), follow.PostFollowActionHandler)
+		uGroup.GET("/relation/follow/list/", middleware.NoAuthToGetUserId(), follow.QueryFollowListHandler)
+		uGroup.GET("/relation/follower/list/", middleware.NoAuthToGetUserId(), follow.QueryFollowerHandler)
 	}
 	return r
 }
