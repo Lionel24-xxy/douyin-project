@@ -58,11 +58,10 @@ func (q *QueryFollowerListFlow) prepareData() error {
 	}
 	//填充is_follow字段
 
-	//待做
-	//for _, v := range q.userList {
-	//	//获取用户关注列表接口
-	//	//v.IsFollow = cache.NewProxyIndexMap().GetUserRelation(q.userId, v.Id)
-	//}
+	for _, v := range q.userList {
+		//获取用户关注列表接口
+		v.IsFollow = repository.GetUserRelation(q.userId, v.ID)
+	}
 	return nil
 }
 
