@@ -88,3 +88,45 @@ func (v *VideoDAO) IsExistVideoById(videoId int64) bool {
 
 	return video.Id != 0
 }
+
+// PlusOneFavorByUserIdAndVideoId 增加一个赞
+func (v *VideoDAO) PlusOneFavorByUserIdAndVideoId(userId int64, videoId int64) error {
+	return DB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Exec("UPDATE videos SET favorite_count=favorite_count+1 WHERE id = ?", videoId).Error; err != nil {
+			return err
+		}
+		if err := tx.Exec("INSERT INTO `user_favorite` (`user_id`,`video_id`) VALUES (?,?)", userId, videoId).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+}
+
+// MinusOneFavorByUserIdAndVideoId 减少一个赞
+func (v *VideoDAO) MinusOneFavorByUserIdAndVideoId(userId int64, videoId int64) error {
+	return DB.Transaction(func(tx *gorm.DB) error {
+		//执行-1之前需要先判断是否合法（不能被减少为负数
+		if err := tx.Exec("UPDATE videos SET favorite_count=favorite_count-1 WHERE id = ? AND favorite_count>0", videoId).Error; err != nil {
+			return err
+		}
+		if err := tx.Exec("DELETE FROM `user_favorite`  WHERE `user_id` = ? AND `video_id` = ?", userId, videoId).Error; err != nil {
+			return err
+		}
+		return nil
+	})
+}
+
+func (v *VideoDAO) QueryFavorVideoListByUserId(userId int64, videoList *[]*Video) error {
+	if videoList == nil {
+		return errors.New("QueryFavorVideoListByUserId videoList 空指针")
+	}
+	//多表查询，左连接得到结果，再映射到数据
+	if err := DB.Raw("SELECT v.* FROM user_favorite u , videos v WHERE u.user_id = ? AND u.video_id = v.id", userId).Scan(videoList).Error; err != nil {
+		return err
+	}
+	//如果id为0，则说明没有查到数据
+	if len(*videoList) == 0 || (*videoList)[0].Id == 0 {
+		return errors.New("点赞列表为空")
+	}
+	return nil
+}
