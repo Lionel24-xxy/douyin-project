@@ -52,6 +52,10 @@ func PublishComment(userId int64, videoId int64, actiontype int64, commentText s
 		if err != nil {
 			return nil, err
 		}
+		// 判断是否为自己发布的评论
+		if comment.UserId != userId {
+			return nil, errors.New("仅可删除自己的评论！")
+		}
 		// 删除comment
 		err = repository.InitCommentDAO().DeleteComment(commentId, videoId)
 		if err != nil {
