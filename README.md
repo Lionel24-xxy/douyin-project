@@ -57,6 +57,9 @@
         comment.go 修改评论时间为前端要求格式
         jwt.go   jwt令牌
         password.go  sha1加密
+        sensitiveWords.go 敏感词检测
+        sensitiveWords.txt min'gan
+        sensitiveWords_test.go 测试文件
         snowflakes.go 雪花算法
         video.go  雪花id和userid生成独一无二视频名，视频url拼接
 ```

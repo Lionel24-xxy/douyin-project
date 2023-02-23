@@ -86,5 +86,5 @@ func (v *VideoDAO) IsExistVideoById(videoId int64) bool {
 	var video Video
 	DB.Find(&video, "id=?", videoId)
 
-	return video.Id == 0
+	return video.Id != 0
 }

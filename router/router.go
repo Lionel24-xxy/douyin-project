@@ -17,7 +17,7 @@ func InitRouter() *gin.Engine {
 	// 视频及截图存放位置
 	r.Static("static", "./static")
 
-	uGroup := r.Group("douyin")
+	uGroup := r.Group("douyin", middleware.RateMiddleware)
 	{
 		// 基础接口
 		uGroup.GET("/feed/", feed.FeedVideoListHandler)

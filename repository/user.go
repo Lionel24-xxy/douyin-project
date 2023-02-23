@@ -82,7 +82,7 @@ func (u *UserDAO) IsExistUserId(userid int64) bool {
 	var user User
 	DB.Where("id=?", userid).First(&user)
 
-	return user.ID == 0
+	return user.ID != 0
 }
 
 func (u *UserDAO) GetFollowerListByUserId(userId int64, userList *[]*User) error {

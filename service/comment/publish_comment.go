@@ -20,11 +20,11 @@ type CommentResponse struct {
 func PublishComment(userId int64, videoId int64, actiontype int64, commentText string, commentId int64) (*CommentResponse, error) {
 	/// 参数检查
 	// 检查用户是否存在
-	if repository.InitUserDao().IsExistUserId(userId) {
+	if !repository.InitUserDao().IsExistUserId(userId) {
 		return nil, fmt.Errorf("用户%d不存在", userId)
 	}
 	// 检查视频是否存在
-	if repository.NewVideoDAO().IsExistVideoById(videoId) {
+	if !repository.NewVideoDAO().IsExistVideoById(videoId) {
 		return nil, fmt.Errorf("视频%d不存在", videoId)
 	}
 	// 判断actiontype

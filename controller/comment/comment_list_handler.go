@@ -24,12 +24,14 @@ func CommentListHandler(c *gin.Context) {
 	var p ProxyCommentListHandler
 	err := p.prepareParse(c)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"status_code": 1, "statue_msg": err})
+		c.JSON(http.StatusOK, gin.H{"status_code": 1, "statue_msg": err.Error()})
+		return
 	}
 
 	commentList, err := comment.QueryCommentList(p.userId, p.videoId)
 	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"status_code": 2, "statue_msg": err})
+		c.JSON(http.StatusOK, gin.H{"status_code": 2, "statue_msg": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, CommentListResponse{

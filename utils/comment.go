@@ -14,7 +14,7 @@ func FillCommentFields(comment *repository.Comment) error {
 }
 
 func FillCommentListFields(commentList *[]*repository.Comment) error {
-	if commentList == nil || len(*commentList) == 0 {
+	if commentList == nil {
 		return errors.New("FillCommentListFields commentList 空指针")
 	}
 

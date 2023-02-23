@@ -12,7 +12,7 @@ type List struct {
 func QueryPublishList(userid int64) (*List, error) {
 
 	// 检查用户是否存在
-	if repository.InitUserDao().IsExistUserId(userid) {
+	if !repository.InitUserDao().IsExistUserId(userid) {
 		return nil, errors.New("用户不存在")
 	}
 

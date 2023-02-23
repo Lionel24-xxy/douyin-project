@@ -13,10 +13,10 @@ type CommentList struct {
 
 func QueryCommentList(userId, videoId int64) (*CommentList, error) {
 	// 检查数据是否存在
-	if repository.InitUserDao().IsExistUserId(userId) {
+	if !repository.InitUserDao().IsExistUserId(userId) {
 		return nil, fmt.Errorf("用户%d处于登出状态", userId)
 	}
-	if repository.NewVideoDAO().IsExistVideoById(videoId) {
+	if !repository.NewVideoDAO().IsExistVideoById(videoId) {
 		return nil, fmt.Errorf("视频%d不存在或已经被删除", videoId)
 	}
 
