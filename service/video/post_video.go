@@ -29,6 +29,7 @@ type PostVideoFlow struct {
 
 func (f *PostVideoFlow) Do() error {
 	f.prepareParam()
+	f.title = f.sensitiveCheck(f.title)
 	if err := f.publish(); err != nil {
 		return err
 	}
@@ -58,4 +59,15 @@ func (f *PostVideoFlow) addWorkCount() error {
 func (f *PostVideoFlow) prepareParam() {
 	f.videoName = utils.GetFileUrl(f.videoName)
 	f.coverName = utils.GetFileUrl(f.coverName)
+}
+
+// 敏感词检测及替换
+func (f *PostVideoFlow) sensitiveCheck(text string) string {
+
+	isContain := utils.SensitiveWordCheck(text, int(f.userId))
+	if isContain {
+		replaceText := utils.SensitiveWordReplace(text)
+		return replaceText
+	}
+	return text
 }
