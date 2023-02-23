@@ -2,6 +2,7 @@ package video
 
 import (
 	"TikTok_Project/repository"
+	"TikTok_Project/utils"
 	"time"
 )
 
@@ -50,7 +51,14 @@ func (q *QueryFeedVideoListFlow) prepareData() error {
 	if err != nil {
 		return err
 	}
-	//还有要补充的
+	//如果用户为登录状态，则更新该视频是否被该用户点赞的状态
+	latestTime, _ := utils.FillVideoListFields(q.userId, &q.videos) //不是致命错误，不返回
+
+	//准备好时间戳
+	if latestTime != nil {
+		q.nextTime = (*latestTime).UnixNano() / 1e6
+		return nil
+	}
 	q.nextTime = time.Now().Unix() / 1e6
 	return nil
 }
