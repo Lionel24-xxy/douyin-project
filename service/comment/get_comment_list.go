@@ -8,12 +8,12 @@ import (
 )
 
 type CommentList struct {
-	Comments []*repository.Comment  `json:"comment_list"`
+	Comments []*repository.Comment `json:"comment_list"`
 }
 
 func QueryCommentList(userId, videoId int64) (*CommentList, error) {
 	// 检查数据是否存在
-	if repository.InitUserDao().IsExistUserId(userId) {
+	if !repository.InitUserDao().IsExistUserId(userId) {
 		return nil, fmt.Errorf("用户%d处于登出状态", userId)
 	}
 	if repository.NewVideoDAO().IsExistVideoById(videoId) {
