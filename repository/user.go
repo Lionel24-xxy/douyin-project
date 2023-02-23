@@ -96,7 +96,7 @@ func (u *UserDAO) GetFollowerListByUserId(userId int64, userList *[]*User) error
 		return errors.New("空指针错误")
 	}
 	var err error
-	if err = DB.Raw("SELECT u.* FROM user_relations r, user_infos u WHERE r.follow_id = ? AND r.user_info_id = u.id", userId).Scan(userList).Error; err != nil {
+	if err = DB.Raw("SELECT u.* FROM user_relations r, users u WHERE r.follow_id = ? AND r.user_id = u.id", userId).Scan(userList).Error; err != nil {
 		return err
 	}
 
@@ -135,4 +135,18 @@ func (u *UserDAO) CancelUserFollow(userId, userToId int64) error {
 		}
 		return nil
 	})
+}
+
+func (u *UserDAO) GetFollowListByUserId(userId int64, userList *[]*User) error {
+	if userList == nil {
+		return errors.New("空指针错误")
+	}
+	var err error
+	if err = DB.Raw("SELECT u.* FROM user_relations r, users u WHERE r.user_id = ? AND r.follow_id = u.id", userId).Scan(userList).Error; err != nil {
+		return err
+	}
+	if len(*userList) == 0 || (*userList)[0].ID == 0 {
+		return errors.New("用户列表为空")
+	}
+	return nil
 }
