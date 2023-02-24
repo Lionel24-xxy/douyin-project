@@ -2,14 +2,15 @@ package repository
 
 import (
 	"errors"
-	"github.com/jinzhu/gorm"
+
 	"log"
 	"sync"
+
+	"github.com/jinzhu/gorm"
 )
 
-var (
-	EmptyUserList = errors.New("用户粉丝列表为空")
-)
+var EmptyUserList = errors.New("用户粉丝列表为空")
+
 
 type User struct {
 	ID              int64      `json:"id" gorm:"id,omitempty;primaryKey;AUTO_INCREMENT"`
@@ -150,3 +151,17 @@ func (u *UserDAO) GetFollowListByUserId(userId int64, userList *[]*User) error {
 	}
 	return nil
 }
+
+
+// func (u *UserDAO) GetFriendListByUserId(userId int64, userList *[]*User) error {
+// 	if userList == nil {
+// 		return errors.New("空指针错误")
+// 	}
+// 	var user []*User
+// 	DB.Where("user_relations.follow_id = user_relations.user_id and users.id = ?", userId).
+//    Joins("JOIN user_relations ON users.id = user_relations.follow_id OR users.id = user_relations.user_id").
+//    Group("users.id").
+//    Find(&user)
+//    userList = &user
+// 	return nil
+// }

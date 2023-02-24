@@ -39,6 +39,7 @@ func InitRouter() *gin.Engine {
 		uGroup.POST("/relation/action/", middleware.JWTMiddleWare(), follow.PostFollowActionHandler)
 		uGroup.GET("/relation/follow/list/", middleware.NoAuthToGetUserId(), follow.QueryFollowListHandler)
 		uGroup.GET("/relation/follower/list/", middleware.NoAuthToGetUserId(), follow.QueryFollowerHandler)
+		//uGroup.GET("/relation/friend/list/", middleware.JWTMiddleWare(), follow.QueryFriendHandler)
 	}
 	return r
 }
