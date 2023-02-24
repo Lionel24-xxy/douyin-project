@@ -150,3 +150,15 @@ func (u *UserDAO) GetFollowListByUserId(userId int64, userList *[]*User) error {
 	}
 	return nil
 }
+
+func (u *UserDAO) GetFriendListByUserId(userId int64, userList *[]*User) error {
+	if userList == nil {
+		return errors.New("空指针错误")
+	}
+	var err error
+	//if err = DB.Raw("SELECT u.* FROM user_relations r,users u WHERE r.follow_id = ? AND r.user_id = u.id", userId).Scan(userList).Error; err != nil {
+	if err = DB.Raw("SELECT t1.* FROM (SELECT * FROM user_relations WHERE `user_id` = ?) AS t1 INNER JOIN (SELECT * FROM user_relations WHERE `follow_id` = ?) AS t2 ON t1.follow_id = t2.user_id", userId).Scan(userList).Error; err != nil {
+		return err
+	}
+	return nil
+}
