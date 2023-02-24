@@ -1,5 +1,12 @@
 如果图片加载不出来请访问[说明文档的pdf下载](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/README.pdf)
 
+如果出现问题请联系：
+
+- 周幸：https://github.com/zhouxing9454
+- 许昕宇：https://github.com/Lionel24-xxy
+- 吴思：https://github.com/Stevenwch
+- 刘涛：https://github.com/LeoTao777
+
 # 一、项目介绍
 
 本项目实现了抖声服务端的基础功能（视频流，投稿视频，用户注册登录等），同时拓展了互动模块和社交模块（点赞，评论，关注等）。
