@@ -1,3 +1,12 @@
+如果图片加载不出来请访问[说明文档的pdf下载](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/README.pdf)
+
+如果出现问题请联系：
+
+- 周幸：https://github.com/zhouxing9454
+- 许昕宇：https://github.com/Lionel24-xxy
+- 吴思：https://github.com/Stevenwch
+- 刘涛：https://github.com/LeoTao777
+
 # 一、项目介绍
 
 本项目实现了抖声服务端的基础功能（视频流，投稿视频，用户注册登录等），同时拓展了互动模块和社交模块（点赞，评论，关注等）。
@@ -85,7 +94,7 @@ Github项目地址：https://github.com/Lionel24-xxy/douyin-project
 
 #### 3.2.1 数据库表结构设计
 
-![img](https://jdxhj9jomk.feishu.cn/space/api/box/stream/download/asynccode/?code=MzhjNmFhMmYwZjA4NzYwMzM1YjRkMDgxMDczN2E2MzRfQ2FCdVR1aVZzUVlSZHpoYUdaVzliZUFWbUxManIzMVNfVG9rZW46Ym94Y25xdmVvd3B3eTRsdVBqZmNyMG5udElkXzE2NzcxNzY4Nzg6MTY3NzE4MDQ3OF9WNA)
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
 
 主要有三个表：User、Video、Comment，利用 Gorm 中`Many to Many`另外生成两个表：user_relations、user_favorite 用于存放不同用户之间的关注信息和用户与点赞视频之间的关联信息。
 
@@ -177,6 +186,7 @@ type Comment struct {
 │  │
 │  ├─follow
 │  │      follow_action_handler.go 关注处理器
+│  │      query_friend_handler.go 好友列表处理器
 │  │      follow_list_handler.go 关注列表处理器
 │  │      query_follower_handler.go  粉丝列表处理器
 │  │
@@ -218,7 +228,8 @@ type Comment struct {
 │  │      common_test.go 
 │  │      user_login.go 用户登录
 │  │      user_register.go  用户注册
-│  │
+│  │      query_friend_list.go 好友列表
+│  │      
 │  └─video
 │          post_favor_state.go 点赞功能
 │          query_favor_videolist.go 喜欢列表
@@ -348,20 +359,200 @@ type Comment struct {
    4. 根据查询信息进行数据封装后返回
 2. 获取好友列表 /douyin/relation/friend/list/
 
+- 使用JWT中间件对Token进行验证
+  - 验证失败：返回失败原因，阻止向下运行
+  - 验证成功：将user_id存入上下文中
+- 对参数进行验证
+- 根据登录用户id使用联合索引获取粉丝用户id列表，并查询用户与粉丝相互关注的用户信息
+- 根据查询信息进行数据封装后返回
+
 # 四、测试结果
 
 > 建议从功能测试和性能测试两部分分析，其中功能测试补充测试用例，性能测试补充性能分析报告、可优化点等内容。
 
-***功能测试为必填**
+### 1.功能测试
 
-# 五、Demo 演示视频 （必填）
+#### 1.1视频流接口
+
+测试用例:
+
+| 参数名      | 位置  | 类型   | 值   |
+| ----------- | ----- | ------ | ---- |
+| latest_time | query | string | 不填 |
+| token       | query | string | 不填 |
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+#### 1.2 用户注册接口
+
+测试用例：
+
+| 参数名   | 位置  | 类型   | 值                   |
+| -------- | ----- | ------ | -------------------- |
+| username | query | string | zhouxing9454         |
+| password | query | string | zhouxing9454ZHOUXING |
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+#### 1.3用户登录接口
+
+测试用例：
+
+| 参数名   | 位置  | 类型   | 值                   |
+| -------- | ----- | ------ | -------------------- |
+| username | query | string | zhouxing9454         |
+| password | query | string | zhouxing9454ZHOUXING |
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+#### 1.4用户信息接口
+
+测试用例：
+
+| 参数名  | 位置  | 类型   | 值                                                           |
+| ------- | ----- | ------ | ------------------------------------------------------------ |
+| user_id | query | String | 2                                                            |
+| token   | query | string | eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjIsImV4cCI6MTY3NzgwODgyMSwiaWF0IjoxNjc3MjA0MDIxLCJpc3MiOiJkb3V5aW5fcHJvX2JqeGYiLCJzdWIiOiJ1c2VyIHRva2VuIn0.K1z9iJQZiYrmM97v5VtWl6A_shwlwh4Hh80ZgHmx6mA |
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+#### 1.5 投稿接口
+
+测试用例
+
+| 参数名 | 类型   | 值                                                           |
+| ------ | ------ | ------------------------------------------------------------ |
+| data   | file   | 自己选择一个MP4文件，当然你可以选择不为视频格式的文件，测试是否报错 |
+| token  | string | 同上面那个接口的token                                        |
+| title  | string | 习近平（敏感词测试）                                         |
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+#### 1.6 发布列表接口
+
+测试用例：
+
+| 参数名  | 类型   | 值     |
+| ------- | ------ | ------ |
+| token   | string | 同上面 |
+| user_id | string | 2      |
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+#### 1.7 点赞接口
+
+测试用例：
+
+| 参数名      | 类型   | 值                                                           |
+| ----------- | ------ | ------------------------------------------------------------ |
+| token       | string | 同上                                                         |
+| video_id    | string | 2                                                            |
+| action_type | string | 我们可以先使用1进行点赞，然后继续使用1进行点赞，它会报重复点赞的错误，然后我们使用2取消点赞，使点赞数-1。 |
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+#### 1.8 喜欢列表接口
+
+测试用例：
+
+| 参数名  | 类型   | 值     |
+| ------- | ------ | ------ |
+| user_id | string | 2      |
+| token   | string | 同上面 |
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+#### 1.9 评论操作接口
+
+测试用例：
+
+| 参数名       | 类型   | 值                                                           |
+| ------------ | ------ | ------------------------------------------------------------ |
+| token        | String | 同上                                                         |
+| video_id     | string | 2                                                            |
+| action_type  | string | 我们先使用1评论，然后使用2删除评论，再使用2删除评论评论（测试是否越权） |
+| comment_text | string | 习近平（敏感词）                                             |
+| comment_id   | string | 要删除的评论id                                               |
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+![img](https://jdxhj9jomk.feishu.cn/space/api/box/stream/download/asynccode/?code=YjFjYmUxZTAyZDZmMjQ4MzE3NGMzNTViY2NlNGM0ZmNfY3AwUERDbktld2hsUTlsa0VMTWRPeTA4Nzl6T2ZqdlJfVG9rZW46Ym94Y25iOWlXVkJmRTVjc0ZhMlpOU0p1bVFnXzE2NzcyMTA2MzE6MTY3NzIxNDIzMV9WNA)
+
+![img](https://jdxhj9jomk.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmJjMDAyMGZiM2EzYjJhM2I5Y2IwMWI5ZjI2ODlhMmVfY3Q0a2I3TVRObHdwdFk1WEV2ZjVDamV0R1dXNmVtZVJfVG9rZW46Ym94Y25ZZ2RJT2ZONFFhVjJsYmhVTkhhVzRXXzE2NzcyMTA2MzE6MTY3NzIxNDIzMV9WNA)
+
+#### 1.10评论列表接口
+
+测试用例:
+
+| 参数名   | 类型   | 值     |
+| -------- | ------ | ------ |
+| token    | string | 同上面 |
+| video_id | string | 2      |
+
+![img](https://jdxhj9jomk.feishu.cn/space/api/box/stream/download/asynccode/?code=OTZjNTE1NWM2MWRhNTQ4ODNkMDdkODMzNWVmYzE4ZmRfb3ZUUUVxc1I1TDFHOEFxQ3ZmbFlvR0UzcGtLZHhkU3RfVG9rZW46Ym94Y25CYlE4UUhQQXBZUjFoQkNvczI5czNmXzE2NzcyMTA2MzE6MTY3NzIxNDIzMV9WNA)
+
+#### 1.11 关注操作接口
+
+测试用例：
+
+| 参数名      | 位置  | 类型   | 值                                                           |
+| ----------- | ----- | ------ | ------------------------------------------------------------ |
+| token       | query | string | 同上                                                         |
+| to_user_id  | query | string | 我们首先试一下能不能自己关注自己（使用自己的user_id)，然后再关注别人。 |
+| action_type | query | string | 1-关注，2-取消关注                                           |
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+![img](https://jdxhj9jomk.feishu.cn/space/api/box/stream/download/asynccode/?code=MjljN2EyNDFiZmY2ODNkODczNTllMTBlMTczYThjMWNfdzVjQWVQcmo0SUt1SVJHcHhsQ3BkWGJVZGFJanlUbzFfVG9rZW46Ym94Y242dDZHQTRvMVR4YkkxRDAzV2s5UUFnXzE2NzcyMTA2MzE6MTY3NzIxNDIzMV9WNA)
+
+#### 1.12 关注列表接口
+
+测试用例：
+
+| 参数名  | 位置  | 类型   | 值   |
+| ------- | ----- | ------ | ---- |
+| user_id | query | string | 2    |
+| token   | query | string | 同上 |
+
+![img](https://jdxhj9jomk.feishu.cn/space/api/box/stream/download/asynccode/?code=NzBjNDE2NmU1YWU5ZGVjNmUzZjA0NjU0NWEzYzMyMGFfVVpHTzRpYXdqTkJxWk5RdmlNWGliRkJOaXgwa3dqSlVfVG9rZW46Ym94Y25pOHkxV0t0b3ZaNE5uS2ZmSWFweVlhXzE2NzcyMTA2MzE6MTY3NzIxNDIzMV9WNA)
+
+#### 1.13 粉丝列表接口
+
+测试用例：
+
+| 参数名  | 位置  | 类型   | 值   |
+| ------- | ----- | ------ | ---- |
+| user_id | query | string | 2    |
+| token   | query | string | 同上 |
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+#### 1.14 好友列表接口
+
+测试用例：
+
+| 参数名  | 位置  | 类型   | 值   |
+| ------- | ----- | ------ | ---- |
+| user_id | query | string | 2    |
+| token   | query | string | 同上 |
+
+![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+
+# 五、Demo 演示视频 
+
+[演示视频](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/douyin_project.mp4)
 
 # 六、项目总结与反思
 
 1. ### 目前仍存在的问题
 
-- 关注列表的人，还显示可以关注
-- 发布视频之后发布列表不能直接作品+1,必须重新登录才行
+- 关注列表的人，还显示关注按钮
+- 好友列表在消息那一栏显示，好友那一栏不显示
+- 发布视频之后发布列表上面的作品不会+1,必须重新登录才行
 
 1. ### 已识别出的优化项
 
@@ -374,7 +565,6 @@ type Comment struct {
 
 - 我们采用的是自上而下的架构模式，后期的重构开发存在很大风险和难度，因此我们打算之后将该项目重构，使用微服务框架KiteX,进行二次开发。微服务架构独立性高，而且是进程隔离的，组件之间还可以独立治理，方便我们进行维护。
 
-
 1. ### 项目过程中的反思与总结
 
 - 我们曾经遇到过一个项目回滚的经历，这让我们团队意识到上传项目并不是自己模块完成，测完就行，一定要看看其他功能是否未受到影响。
@@ -384,3 +574,8 @@ type Comment struct {
 # 七、鸣谢
 
 [字节青训营](https://youthcamp.bytedance.com/)
+
+
+
+
+

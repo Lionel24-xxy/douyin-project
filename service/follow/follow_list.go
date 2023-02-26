@@ -54,6 +54,9 @@ func (q *QueryFollowListFlow) prepareData() error {
 	if err != nil {
 		return err
 	}
+	for i, _ := range userList {
+		userList[i].IsFollow = true //当前用户的关注列表，故isFollow定为true
+	}
 	q.userList = userList
 	return nil
 }
