@@ -94,7 +94,7 @@ Github项目地址：https://github.com/Lionel24-xxy/douyin-project
 
 #### 3.2.1 数据库表结构设计
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+![image-20230319161441568](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319161441568.png)
 
 主要有三个表：User、Video、Comment，利用 Gorm 中`Many to Many`另外生成两个表：user_relations、user_favorite 用于存放不同用户之间的关注信息和用户与点赞视频之间的关联信息。
 
@@ -381,7 +381,7 @@ type Comment struct {
 | latest_time | query | string | 不填 |
 | token       | query | string | 不填 |
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+![image-20230319161745283](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319161745283.png)
 
 #### 1.2 用户注册接口
 
@@ -392,7 +392,7 @@ type Comment struct {
 | username | query | string | zhouxing9454         |
 | password | query | string | zhouxing9454ZHOUXING |
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+![image-20230319161755360](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319161755360.png)
 
 #### 1.3用户登录接口
 
@@ -403,7 +403,7 @@ type Comment struct {
 | username | query | string | zhouxing9454         |
 | password | query | string | zhouxing9454ZHOUXING |
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+![image-20230319161807802](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319161807802.png)
 
 #### 1.4用户信息接口
 
@@ -414,7 +414,7 @@ type Comment struct {
 | user_id | query | String | 2                                                            |
 | token   | query | string | eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjIsImV4cCI6MTY3NzgwODgyMSwiaWF0IjoxNjc3MjA0MDIxLCJpc3MiOiJkb3V5aW5fcHJvX2JqeGYiLCJzdWIiOiJ1c2VyIHRva2VuIn0.K1z9iJQZiYrmM97v5VtWl6A_shwlwh4Hh80ZgHmx6mA |
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+![image-20230319161818314](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319161818314.png)
 
 #### 1.5 投稿接口
 
@@ -426,7 +426,7 @@ type Comment struct {
 | token  | string | 同上面那个接口的token                                        |
 | title  | string | 习近平（敏感词测试）                                         |
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+![image-20230319161829307](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319161829307.png)
 
 #### 1.6 发布列表接口
 
@@ -437,7 +437,7 @@ type Comment struct {
 | token   | string | 同上面 |
 | user_id | string | 2      |
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+![image-20230319161841799](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319161841799.png)
 
 #### 1.7 点赞接口
 
@@ -449,11 +449,9 @@ type Comment struct {
 | video_id    | string | 2                                                            |
 | action_type | string | 我们可以先使用1进行点赞，然后继续使用1进行点赞，它会报重复点赞的错误，然后我们使用2取消点赞，使点赞数-1。 |
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+![image-20230319161900842](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319161900842.png)
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
 
 #### 1.8 喜欢列表接口
 
@@ -464,7 +462,7 @@ type Comment struct {
 | user_id | string | 2      |
 | token   | string | 同上面 |
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+![image-20230319161917039](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319161917039.png)
 
 #### 1.9 评论操作接口
 
@@ -478,11 +476,7 @@ type Comment struct {
 | comment_text | string | 习近平（敏感词）                                             |
 | comment_id   | string | 要删除的评论id                                               |
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
-
-![img](https://jdxhj9jomk.feishu.cn/space/api/box/stream/download/asynccode/?code=YjFjYmUxZTAyZDZmMjQ4MzE3NGMzNTViY2NlNGM0ZmNfY3AwUERDbktld2hsUTlsa0VMTWRPeTA4Nzl6T2ZqdlJfVG9rZW46Ym94Y25iOWlXVkJmRTVjc0ZhMlpOU0p1bVFnXzE2NzcyMTA2MzE6MTY3NzIxNDIzMV9WNA)
-
-![img](https://jdxhj9jomk.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmJjMDAyMGZiM2EzYjJhM2I5Y2IwMWI5ZjI2ODlhMmVfY3Q0a2I3TVRObHdwdFk1WEV2ZjVDamV0R1dXNmVtZVJfVG9rZW46Ym94Y25ZZ2RJT2ZONFFhVjJsYmhVTkhhVzRXXzE2NzcyMTA2MzE6MTY3NzIxNDIzMV9WNA)
+![image-20230319161937487](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319161937487.png)
 
 #### 1.10评论列表接口
 
@@ -493,7 +487,7 @@ type Comment struct {
 | token    | string | 同上面 |
 | video_id | string | 2      |
 
-![img](https://jdxhj9jomk.feishu.cn/space/api/box/stream/download/asynccode/?code=OTZjNTE1NWM2MWRhNTQ4ODNkMDdkODMzNWVmYzE4ZmRfb3ZUUUVxc1I1TDFHOEFxQ3ZmbFlvR0UzcGtLZHhkU3RfVG9rZW46Ym94Y25CYlE4UUhQQXBZUjFoQkNvczI5czNmXzE2NzcyMTA2MzE6MTY3NzIxNDIzMV9WNA)
+![image-20230319161954075](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319161954075.png)
 
 #### 1.11 关注操作接口
 
@@ -505,9 +499,9 @@ type Comment struct {
 | to_user_id  | query | string | 我们首先试一下能不能自己关注自己（使用自己的user_id)，然后再关注别人。 |
 | action_type | query | string | 1-关注，2-取消关注                                           |
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+![image-20230319162007530](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319162007530.png)
 
-![img](https://jdxhj9jomk.feishu.cn/space/api/box/stream/download/asynccode/?code=MjljN2EyNDFiZmY2ODNkODczNTllMTBlMTczYThjMWNfdzVjQWVQcmo0SUt1SVJHcHhsQ3BkWGJVZGFJanlUbzFfVG9rZW46Ym94Y242dDZHQTRvMVR4YkkxRDAzV2s5UUFnXzE2NzcyMTA2MzE6MTY3NzIxNDIzMV9WNA)
+![image-20230319162012584](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319162012584.png)
 
 #### 1.12 关注列表接口
 
@@ -518,7 +512,7 @@ type Comment struct {
 | user_id | query | string | 2    |
 | token   | query | string | 同上 |
 
-![img](https://jdxhj9jomk.feishu.cn/space/api/box/stream/download/asynccode/?code=NzBjNDE2NmU1YWU5ZGVjNmUzZjA0NjU0NWEzYzMyMGFfVVpHTzRpYXdqTkJxWk5RdmlNWGliRkJOaXgwa3dqSlVfVG9rZW46Ym94Y25pOHkxV0t0b3ZaNE5uS2ZmSWFweVlhXzE2NzcyMTA2MzE6MTY3NzIxNDIzMV9WNA)
+![image-20230319162024888](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319162024888.png)
 
 #### 1.13 粉丝列表接口
 
@@ -529,7 +523,7 @@ type Comment struct {
 | user_id | query | string | 2    |
 | token   | query | string | 同上 |
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+![image-20230319162031835](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319162031835.png)
 
 #### 1.14 好友列表接口
 
@@ -540,7 +534,7 @@ type Comment struct {
 | user_id | query | string | 2    |
 | token   | query | string | 同上 |
 
-![img](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/asynccode)
+![image-20230319162041403](https://blog-1314857283.cos.ap-shanghai.myqcloud.com/images/image-20230319162041403.png)
 
 # 五、Demo 演示视频 
 
